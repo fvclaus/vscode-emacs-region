@@ -1,7 +1,13 @@
-# vscode-emacs-region
+# vscode-emacs-region-macos
+
 This is an extension for Visual Studio Code which provides region selection similar to that of Emacs.
 
+Is a fork of the great vscode extension by [t-yng](https://github.com/t-yng/vscode-emacs-region).
+
+The only difference with the original extension is that it switches the Key Binding for the cursor word movement, from `ctrl+right` and `ctrl+left` to `alt+right` and `alt+left`.
+
 ## Keybindings
+
 |key|explanation|
 |---|-----------|
 |ctrl+f|move selection cursor right|
@@ -12,8 +18,8 @@ This is an extension for Visual Studio Code which provides region selection simi
 |left|move selection cursor left|
 |up|move selection cursor up|
 |down|move selection cursor down|
-|ctrl+right|move selection cursor one word to the right|
-|ctrl+left|move selection cursor one word to the left|
+|alt+right|move selection cursor one word to the right|
+|alt+left|move selection cursor one word to the left|
 |ctrl+v|move selection cursor one page down|
 |alt+v|move selection cursor one page up|
 |ctrl+a|move selection cursor to start of line|

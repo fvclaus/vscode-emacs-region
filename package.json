@@ -1,23 +1,23 @@
 {
-	"name": "emacs-region",
-	"displayName": "emacs-region",
-	"description": "this extension provides region selection like emacs",
-	"version": "1.1.0",
-	"publisher": "t-yng",
-	"engines": {
-		"vscode": "^0.10.6"
-	},
-	 "repository": {
+    "name": "emacs-region-macos",
+    "displayName": "emacs-region-macos",
+    "description": "this extension provides region selection like emacs",
+    "version": "1.1.0",
+    "publisher": "lmauromb",
+    "engines": {
+        "vscode": "^0.10.6"
+    },
+    "repository": {
         "type": "git",
-        "url": "https://github.com/t-yng/vscode-emacs-region"
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"*"
-	],
-	"main": "./out/src/extension",
+        "url": "https://github.com/lmauromb/vscode-emacs-region"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./out/src/extension",
     "contributes": {
         "keybindings": [
             {
@@ -25,7 +25,7 @@
                 "command": "cursorRight",
                 "when": "editorTextFocus && !inRegionMode"
             },
-                        {
+            {
                 "key": "ctrl+b",
                 "command": "cursorLeft",
                 "when": "editorTextFocus && !inRegionMode"
@@ -209,13 +209,13 @@
             }
         ]
     },
-	"scripts": {
-		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-		"compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+    "scripts": {
+        "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
         "postinstall": "node ./node_modules/vscode/bin/install"
-	},
-	"devDependencies": {
-		"typescript": "^1.7.5",
-		"vscode": "^0.11.0"
-	}
+    },
+    "devDependencies": {
+        "typescript": "^1.7.5",
+        "vscode": "^0.11.0"
+    }
 }
