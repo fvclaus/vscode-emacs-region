@@ -66,7 +66,7 @@
                 "when": "editorTextFocus && !inRegionMode"
             },
             {
-                "key": "ctrl+left",
+                "key": "alt+left",
                 "command": "cursorWordStartLeft",
                 "when": "editorTextFocus && !inRegionMode"
             },
@@ -81,7 +81,7 @@
                 "when": "editorTextFocus && !inRegionMode"
             },
             {
-                "key": "ctrl+right",
+                "key": "alt+right",
                 "command": "cursorWordEndRight",
                 "when": "editorTextFocus && !inRegionMode"
             },
@@ -126,7 +126,7 @@
                 "when": "editorTextFocus && inRegionMode"
             },
             {
-                "key": "ctrl+left",
+                "key": "alt+left",
                 "command": "cursorWordStartLeftSelect",
                 "when": "editorTextFocus && inRegionMode"
             },
@@ -141,7 +141,7 @@
                 "when": "editorTextFocus && inRegionMode"
             },
             {
-                "key": "ctrl+right",
+                "key": "alt+right",
                 "command": "cursorWordEndRightSelect",
                 "when": "editorTextFocus && inRegionMode"
             },
