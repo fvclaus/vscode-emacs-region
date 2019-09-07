@@ -101,16 +101,6 @@
         "when": "editorTextFocus && !inRegionMode"
       },
       {
-        "key": "ctrl+v",
-        "command": "cursorPageDown",
-        "when": "editorTextFocus && !inRegionMode"
-      },
-      {
-        "key": "alt+v",
-        "command": "cursorPageUp",
-        "when": "editorTextFocus && !inRegionMode"
-      },
-      {
         "key": "alt+shift+,",
         "command": "cursorTop",
         "when": "editorTextFocus && !inRegionMode"
@@ -159,16 +149,6 @@
         "key": "ctrl+e",
         "command": "cursorEndSelect",
         "when": "editorTextFocus && inRegionMode"
-      },
-      {
-        "key": "ctrl+v",
-        "command": "cursorPageDownSelect",
-        "when": "editorTextFocus && !inRegionMode"
-      },
-      {
-        "key": "alt+v",
-        "command": "cursorPageUpSelect",
-        "when": "editorTextFocus && !inRegionMode"
       },
       {
         "key": "alt+shift+,",

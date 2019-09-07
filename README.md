@@ -4,7 +4,10 @@ This is an extension for Visual Studio Code which provides region selection simi
 
 Is a fork of the great vscode extension by [t-yng](https://github.com/t-yng/vscode-emacs-region).
 
-The only difference with the original extension is that it switches the Key Binding for the cursor word movement, from `ctrl+right` and `ctrl+left` to `alt+right` and `alt+left`.
+## Differences with the original extension
+
+- Key Binding for the cursor selection by word movement, from `ctrl+right` and `ctrl+left` to `alt+right` and `alt+left`.
+- Key Binding for the cursor selection by page up and page down removed.
 
 ## Keybindings
 
@@ -20,8 +23,6 @@ The only difference with the original extension is that it switches the Key Bind
 | down        | move selection cursor down                  |
 | alt+right   | move selection cursor one word to the right |
 | alt+left    | move selection cursor one word to the left  |
-| ctrl+v      | move selection cursor one page down         |
-| alt+v       | move selection cursor one page up           |
 | ctrl+a      | move selection cursor to start of line      |
 | ctrl+e      | move selection cursor to end of line        |
 | alt+shift+, | move selection cursor to start of file      |
