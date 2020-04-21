@@ -21,23 +21,29 @@
   "contributes": {
     "keybindings": [
       {
+        "key": "alt+f",
+        "command": "cursorWordRight",
+        "when": "editorTextFocus && !inRegionMode"
+      },
+      {
+        "key": "alt+f",
+        "command": "cursorWordRightSelect",
+        "when": "editorTextFocus && inRegionMode"
+      },
+      {
+        "key": "alt+b",
+        "command": "cursorWordLeftSelect",
+        "when": "editorTextFocus && inRegionMode"
+      },
+      {
+        "key": "alt+b",
+        "command": "cursorWordLeft",
+        "when": "editorTextFocus && !inRegionMode"
+      },
+     
+      {
         "key": "ctrl+f",
         "command": "cursorRight",
-        "when": "editorTextFocus && !inRegionMode"
-      },
-      {
-        "key": "ctrl+b",
-        "command": "cursorLeft",
-        "when": "editorTextFocus && !inRegionMode"
-      },
-      {
-        "key": "ctrl+p",
-        "command": "cursorUp",
-        "when": "editorTextFocus && !inRegionMode"
-      },
-      {
-        "key": "ctrl+n",
-        "command": "cursorDown",
         "when": "editorTextFocus && !inRegionMode"
       },
       {
@@ -47,98 +53,39 @@
       },
       {
         "key": "ctrl+b",
+        "command": "cursorLeft",
+        "when": "editorTextFocus && !inRegionMode"
+      },
+
+      {
+        "key": "ctrl+b",
         "command": "cursorLeftSelect",
         "when": "editorTextFocus && inRegionMode"
       },
       {
         "key": "ctrl+p",
+        "command": "cursorUp",
+        "when": "editorTextFocus && !inRegionMode"
+      },
+      {
+        "key": "ctrl+p",
         "command": "cursorUpSelect",
         "when": "editorTextFocus && inRegionMode"
+      }, 
+      {
+        "key": "ctrl+n",
+        "command": "cursorDown",
+        "when": "editorTextFocus && !inRegionMode"
       },
       {
         "key": "ctrl+n",
         "command": "cursorDownSelect",
         "when": "editorTextFocus && inRegionMode"
-      },
-      {
-        "key": "left",
-        "command": "cursorLeft",
-        "when": "editorTextFocus && !inRegionMode"
-      },
-      {
-        "key": "alt+left",
-        "command": "cursorWordStartLeft",
-        "when": "editorTextFocus && !inRegionMode"
-      },
-      {
-        "key": "down",
-        "command": "cursorDown",
-        "when": "editorTextFocus && !inRegionMode"
-      },
-      {
-        "key": "right",
-        "command": "cursorRight",
-        "when": "editorTextFocus && !inRegionMode"
-      },
-      {
-        "key": "alt+right",
-        "command": "cursorWordEndRight",
-        "when": "editorTextFocus && !inRegionMode"
-      },
-      {
-        "key": "up",
-        "command": "cursorUp",
-        "when": "editorTextFocus && !inRegionMode"
       },
       {
         "key": "ctrl+a",
         "command": "cursorHome",
         "when": "editorTextFocus && !inRegionMode"
-      },
-      {
-        "key": "ctrl+e",
-        "command": "cursorEnd",
-        "when": "editorTextFocus && !inRegionMode"
-      },
-      {
-        "key": "alt+shift+,",
-        "command": "cursorTop",
-        "when": "editorTextFocus && !inRegionMode"
-      },
-      {
-        "key": "alt+shift+.",
-        "command": "cursorBottom",
-        "when": "editorTextFocus && !inRegionMode"
-      },
-      {
-        "key": "left",
-        "command": "cursorLeftSelect",
-        "when": "editorTextFocus && inRegionMode"
-      },
-      {
-        "key": "alt+left",
-        "command": "cursorWordStartLeftSelect",
-        "when": "editorTextFocus && inRegionMode"
-      },
-      {
-        "key": "down",
-        "command": "cursorDownSelect",
-        "when": "editorTextFocus && inRegionMode"
-      },
-      {
-        "key": "right",
-        "command": "cursorRightSelect",
-        "when": "editorTextFocus && inRegionMode"
-      },
-      {
-        "key": "alt+right",
-        "command": "cursorWordEndRightSelect",
-        "when": "editorTextFocus && inRegionMode"
-      },
-      {
-        "key": "up",
-        "command": "cursorUpSelect",
-        "when": "editorTextFocus && inRegionMode"
       },
       {
         "key": "ctrl+a",
@@ -150,10 +97,26 @@
         "command": "cursorEndSelect",
         "when": "editorTextFocus && inRegionMode"
       },
+
+      {
+        "key": "ctrl+e",
+        "command": "cursorEnd",
+        "when": "editorTextFocus && !inRegionMode"
+      },
+      {
+        "key": "alt+shift+,",
+        "command": "cursorTop",
+        "when": "editorTextFocus && !inRegionMode"
+      },
       {
         "key": "alt+shift+,",
         "command": "cursorTopSelect",
         "when": "editorTextFocus && inRegionMode"
+      },
+      {
+        "key": "alt+shift+.",
+        "command": "cursorBottom",
+        "when": "editorTextFocus && !inRegionMode"
       },
       {
         "key": "alt+shift+.",
