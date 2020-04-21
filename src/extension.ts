@@ -20,7 +20,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand("emacs.exitRegionMode", () => {
-      exitRegionMode();
+      exitRegionMode().then(removeSelection);
     })
   );
 
@@ -41,11 +41,11 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function startRegionMode() {
-  setRegionMode(true).then(removeSelection);
+  return setRegionMode(true);
 }
 
 function exitRegionMode() {
-  setRegionMode(false).then(removeSelection);
+  return setRegionMode(false);
 }
 
 function setRegionMode(value): Thenable<{}> {
@@ -53,7 +53,7 @@ function setRegionMode(value): Thenable<{}> {
 }
 
 function removeSelection() {
-  var pos: vscode.Position = vscode.window.activeTextEditor.selection.active;
+  var pos: vscode.Position = vscode.window.activeTextEditor.selection.end;
   vscode.window.activeTextEditor.selection = new vscode.Selection(pos, pos);
 }
 
