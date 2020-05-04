@@ -45,7 +45,7 @@ function startRegionMode() {
 }
 
 function exitRegionMode() {
-  return setRegionMode(false);
+  return setRegionMode(false).then(removeSelection);
 }
 
 function setRegionMode(value): Thenable<{}> {
@@ -53,8 +53,12 @@ function setRegionMode(value): Thenable<{}> {
 }
 
 function removeSelection() {
-  var pos: vscode.Position = vscode.window.activeTextEditor.selection.end;
-  vscode.window.activeTextEditor.selection = new vscode.Selection(pos, pos);
+  const activeSelection = vscode.window.activeTextEditor.selection;
+  const end: vscode.Position = activeSelection.end;
+  const start = activeSelection.start;
+  if (!start.isEqual(end)) {
+    vscode.window.activeTextEditor.selection = new vscode.Selection(end, end);
+  }
 }
 
 // this method is called when your extension is deactivated
