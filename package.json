@@ -2,7 +2,7 @@
   "name": "emacs-region-macos",
   "displayName": "emacs-region-macos",
   "description": "this extension provides region selection like emacs",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "publisher": "lmauromb",
   "engines": {
     "vscode": "^1.11.1"
@@ -40,7 +40,6 @@
         "command": "cursorWordLeft",
         "when": "editorTextFocus && !inRegionMode"
       },
-     
       {
         "key": "ctrl+f",
         "command": "cursorRight",
@@ -56,7 +55,6 @@
         "command": "cursorLeft",
         "when": "editorTextFocus && !inRegionMode"
       },
-
       {
         "key": "ctrl+b",
         "command": "cursorLeftSelect",
@@ -71,7 +69,7 @@
         "key": "ctrl+p",
         "command": "cursorUpSelect",
         "when": "editorTextFocus && inRegionMode"
-      }, 
+      },
       {
         "key": "ctrl+n",
         "command": "cursorDown",
@@ -97,7 +95,6 @@
         "command": "cursorEndSelect",
         "when": "editorTextFocus && inRegionMode"
       },
-
       {
         "key": "ctrl+e",
         "command": "cursorEnd",

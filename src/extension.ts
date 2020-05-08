@@ -32,9 +32,19 @@ export function activate(context: vscode.ExtensionContext) {
   selectionActions.forEach(selectionAction => {
     context.subscriptions.push(
       vscode.commands.registerCommand("emacs." + selectionAction, () => {
-        vscode.commands
+        const activeSelection = vscode.window.activeTextEditor.selection;
+        const end: vscode.Position = activeSelection.end;
+        const start = activeSelection.start;
+        // Don't know why this is necessary. Cuts whole line otherwise.
+        if (selectionAction === 'action.clipboardCutAction' && start.isEqual(end)) {
+          return;
+        }
+        const commandExecution = vscode.commands
           .executeCommand("editor." + selectionAction)
           .then(exitRegionMode);
+        if (selectionAction === 'action.clipboardCopyAction') {
+         commandExecution.then(removeSelection);
+        } 
       })
     );
   });
@@ -45,7 +55,7 @@ function startRegionMode() {
 }
 
 function exitRegionMode() {
-  return setRegionMode(false).then(removeSelection);
+  return setRegionMode(false);
 }
 
 function setRegionMode(value): Thenable<{}> {
