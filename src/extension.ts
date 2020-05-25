@@ -7,10 +7,38 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 
+let inRegionMode = false;
+
+const isSelectionBiggerThan1 = (selection: vscode.Selection | undefined) => {
+  if (selection === undefined) {
+    return false
+  }
+
+  const end: vscode.Position = selection.end;
+  const start = selection.start;
+  return !start.isEqual(end);
+}
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
   setRegionMode(false);
+
+  vscode.window.onDidChangeTextEditorSelection(async (e) => {
+    console.log(e, inRegionMode);
+    if (!inRegionMode && isSelectionBiggerThan1(e.selections[0])) {
+      const selection = e.selections[0];
+      const end: vscode.Position = selection.end;
+      const start = selection.start;
+      if (!start.isEqual(end)) {
+        inRegionMode = true;
+        startRegionMode();
+      }
+    } else if (inRegionMode && !isSelectionBiggerThan1(e.selections[0])) {
+      inRegionMode = false;
+      exitRegionMode();
+    }
+  });
 
   context.subscriptions.push(
     vscode.commands.registerCommand("emacs.startRegionMode", () => {
@@ -21,6 +49,22 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand("emacs.exitRegionMode", () => {
       exitRegionMode().then(removeSelection);
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("emacs.killLine", async () => {
+      const activeSelection = vscode.window.activeTextEditor.selection;
+      const start = activeSelection.start;
+      const document = vscode.window.activeTextEditor.document;
+      const workspaceEdit = new vscode.WorkspaceEdit();
+      const line = document.lineAt(start);
+      const selection = new vscode.Range(start, line.range.end);
+      workspaceEdit.replace(document.uri, selection, '');
+      const success  = await vscode.workspace.applyEdit(workspaceEdit);
+      if (!success) {
+        console.warn(`Cannot kill line`);
+      }
     })
   );
 
@@ -51,10 +95,12 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function startRegionMode() {
+  inRegionMode = true;
   return setRegionMode(true);
 }
 
 function exitRegionMode() {
+  inRegionMode = false;
   return setRegionMode(false);
 }
 

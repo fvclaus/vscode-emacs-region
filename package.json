@@ -146,6 +146,11 @@
         "key": "ctrl+space",
         "command": "emacs.startRegionMode",
         "when": "editorFocus"
+      },
+      {
+        "key": "ctrl+k",
+        "command": "emacs.killLine",
+        "when": "editorFocus"
       }
     ]
   },
