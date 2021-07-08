@@ -5,7 +5,7 @@
   "version": "2.0.0",
   "publisher": "lmauromb",
   "engines": {
-    "vscode": "^1.11.1"
+    "vscode": "^1.38.0"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,23 @@
   ],
   "main": "./out/src/extension",
   "contributes": {
+    "commands": [
+      {
+        "command": "emacs.toggleEditor",
+        "shortTitle": "Toggle editor",
+        "title": "Toggle editor"
+      },
+      {
+        "command": "emacs.toggleTerminal",
+        "shortTitle": "Toggle terminal",
+        "title": "Toggle terminal"
+      },
+      {
+        "command": "emacs.toggleDebugConsole",
+        "shortTitle": "Toggle debug console",
+        "title": "Toggle debug console"
+      }
+    ],
     "keybindings": [
       {
         "key": "alt+f",
@@ -157,14 +174,13 @@
   "scripts": {
     "vscode:prepublish": "tsc -p ./",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "postinstall": "node ./node_modules/vscode/bin/install"
+    "watch": "tsc -watch -p ./"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.32",
     "@types/node": "^6.0.40",
+    "@types/vscode": "1.31.0",
     "mocha": "^6.2.0",
-    "typescript": "^2.0.3",
-    "vscode": "^1.0.0"
+    "typescript": "^2.0.3"
   }
 }

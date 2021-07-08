@@ -19,13 +19,153 @@ const isSelectionBiggerThan1 = (selection: vscode.Selection | undefined) => {
   return !start.isEqual(end);
 }
 
+type EditorView = "panel" | "editor" | "both" | "unknown";
+
+type PanelSize = "small" | "large";
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
   setRegionMode(false);
 
+
+  let panelSize : PanelSize = "small";
+  const closePanelAndSidebar = async () => {
+    await vscode.commands.executeCommand("workbench.action.closePanel");
+    await vscode.commands.executeCommand("workbench.action.closeSidebar");
+  }
+
+  let editorView: EditorView | undefined = null;
+  let visibleRangesEditor: number | undefined = null;
+
+  let firstRun = false;
+
+  let maxVisibleLines: number | undefined = null;
+
+  let lastRange: vscode.Range | undefined = null;
+
+
+  await vscode.window.onDidChangeTextEditorVisibleRanges((e) => {
+    const foo = true;
+    if (foo) {
+      return;
+    }
+    if (lastRange == null) {
+      editorView = "editor";
+    }
+    console.log(e);
+    const visibleRange = e.visibleRanges[0];
+    const visibleLines = e.visibleRanges[0].end.line - e.visibleRanges[0].start.line;
+    const availibleLines = e.textEditor.document.lineCount;
+
+    maxVisibleLines = Math.max(maxVisibleLines, visibleLines);
+
+    const lastVisibleLines = lastRange != null? lastRange.end.line - lastRange.start.line : 0;
+    
+    console.log("Visible Lines", visibleLines);
+    if (visibleRangesEditor == null) {
+      visibleRangesEditor = visibleLines;
+    }
+
+    if (visibleRange.end.line == (availibleLines - 1)) {
+      // Cannot determine view mode screen is not filled.
+      console.log(`Cannot determine view. End of file is visible`);
+      editorView = "unknown";
+    } else {
+      if (visibleLines == 0) {
+        editorView = "panel";
+      } else if (visibleLines < (maxVisibleLines - 5)) {
+        editorView = "both";
+      } else {
+        editorView = "editor";
+      } 
+      
+    }
+    
+    lastRange = e.visibleRanges[0];
+
+
+    // const lineCount = e.textEditor.document.lineCount;
+    // if (visibleLines == 0 && e.visibleRanges[0].end.line < lineCount) {
+    //   editorView = "panel";
+    // }
+    // else if (visibleLines < (visibleRangesEditor - 5)) {
+    //   editorView = "both";
+    // } else {
+    //   editorView = "editor";
+    // }
+    console.log(`Editor view is ${editorView}. Max lines is ${maxVisibleLines}`);
+  })
+
+
+  await closePanelAndSidebar();
+  editorView = "editor";
+
+  const togglePanel = async(focusCommand: string) => {
+    switch(editorView) {
+      case "panel": {
+        if (panelSize == "large")  {
+          await vscode.commands.executeCommand("workbench.action.toggleMaximizedPanel");
+          panelSize = "small";
+        }
+        await vscode.commands.executeCommand("workbench.view.explorer");
+        await vscode.commands.executeCommand("workbench.action.problems.focus");
+        await vscode.commands.executeCommand("workbench.action.focusActiveEditorGroup");
+        editorView = "both";
+        break;
+      }
+      case "both":
+      case "editor": {
+        await closePanelAndSidebar();
+        panelSize = "large";
+        await vscode.commands.executeCommand("workbench.action.toggleMaximizedPanel");
+        await vscode.commands.executeCommand(focusCommand);
+        editorView = "panel";
+        break;
+      }
+      case "unknown": {
+        vscode.window.showErrorMessage("Current view is unknown.");
+      }
+    }
+  }
+
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("emacs.toggleEditor", async () => {
+      switch(editorView) {
+        case "panel":
+        case "both": {
+          await closePanelAndSidebar();
+          await vscode.commands.executeCommand("workbench.action.focusActiveEditorGroup");
+          editorView = "editor";
+          break;
+        }
+        case "editor": {
+          if (panelSize == "large") {
+            await vscode.commands.executeCommand("workbench.action.toggleMaximizedPanel");
+            panelSize = "small";
+          }
+          await vscode.commands.executeCommand("workbench.view.explorer");
+          await vscode.commands.executeCommand("workbench.action.problems.focus");
+          await vscode.commands.executeCommand("workbench.action.focusActiveEditorGroup");
+          editorView = "both";
+          break;
+        }
+        case "unknown": {
+          vscode.window.showErrorMessage("Current view is unknown.");
+        }
+      }
+    }),
+    vscode.commands.registerCommand("emacs.toggleTerminal", () => togglePanel("terminal.focus")),
+    vscode.commands.registerCommand("emacs.toggleDebugConsole", () => togglePanel("workbench.debug.action.focusRepl"))
+  )
+
+  const commands = await vscode.commands.getCommands();
+
+
+
   vscode.window.onDidChangeTextEditorSelection(async (e) => {
-    console.log(e, inRegionMode);
+    // console.log(e, inRegionMode);
     if (!inRegionMode && isSelectionBiggerThan1(e.selections[0])) {
       const selection = e.selections[0];
       const end: vscode.Position = selection.end;
