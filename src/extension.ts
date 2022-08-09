@@ -160,6 +160,16 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("emacs.toggleDebugConsole", () => togglePanel("workbench.debug.action.focusRepl"))
   )
 
+  context.subscriptions.push(vscode.commands.registerCommand('emacs.testing.reRunLastRun', async () => {
+    await vscode.commands.executeCommand('testing.cancelRun');
+    await vscode.commands.executeCommand('testing.reRunLastRun')
+  }));
+
+  context.subscriptions.push(vscode.commands.registerCommand('emacs.debug.restart', async () => {
+    await vscode.commands.executeCommand('workbench.action.debug.stop');
+    await vscode.commands.executeCommand('workbench.action.debug.start')
+  }));
+
   const commands = await vscode.commands.getCommands();
 
 
