@@ -36,66 +36,9 @@ export async function activate(context: vscode.ExtensionContext) {
   }
 
   let editorView: EditorView | undefined = null;
-  let visibleRangesEditor: number | undefined = null;
 
-  let firstRun = false;
-
-  let maxVisibleLines: number | undefined = null;
-
-  let lastRange: vscode.Range | undefined = null;
-
-
-  await vscode.window.onDidChangeTextEditorVisibleRanges((e) => {
-    const foo = true;
-    if (foo) {
-      return;
-    }
-    if (lastRange == null) {
-      editorView = "editor";
-    }
-    console.log(e);
-    const visibleRange = e.visibleRanges[0];
-    const visibleLines = e.visibleRanges[0].end.line - e.visibleRanges[0].start.line;
-    const availibleLines = e.textEditor.document.lineCount;
-
-    maxVisibleLines = Math.max(maxVisibleLines, visibleLines);
-
-    const lastVisibleLines = lastRange != null? lastRange.end.line - lastRange.start.line : 0;
-    
-    console.log("Visible Lines", visibleLines);
-    if (visibleRangesEditor == null) {
-      visibleRangesEditor = visibleLines;
-    }
-
-    if (visibleRange.end.line == (availibleLines - 1)) {
-      // Cannot determine view mode screen is not filled.
-      console.log(`Cannot determine view. End of file is visible`);
-      editorView = "unknown";
-    } else {
-      if (visibleLines == 0) {
-        editorView = "panel";
-      } else if (visibleLines < (maxVisibleLines - 5)) {
-        editorView = "both";
-      } else {
-        editorView = "editor";
-      } 
-      
-    }
-    
-    lastRange = e.visibleRanges[0];
-
-
-    // const lineCount = e.textEditor.document.lineCount;
-    // if (visibleLines == 0 && e.visibleRanges[0].end.line < lineCount) {
-    //   editorView = "panel";
-    // }
-    // else if (visibleLines < (visibleRangesEditor - 5)) {
-    //   editorView = "both";
-    // } else {
-    //   editorView = "editor";
-    // }
-    console.log(`Editor view is ${editorView}. Max lines is ${maxVisibleLines}`);
-  })
+  // Eine Idee, die nicht funktioniert: Anhand der Editor Selection rausfinden, ob das gesamte Dokument angezeigt wird
+  // uns so Rückschlüsse daraus ziehen, ob das panel offen ist oder nicht.
 
 
   await closePanelAndSidebar();
@@ -170,8 +113,13 @@ export async function activate(context: vscode.ExtensionContext) {
     await vscode.commands.executeCommand('workbench.action.debug.start')
   }));
 
-  const commands = await vscode.commands.getCommands();
-
+  context.subscriptions.push(vscode.commands.registerCommand("emacs.copyAll", async () => {
+    const activeTextEditor = vscode.window.activeTextEditor;
+    const lastLine = activeTextEditor.document.lineCount - 1
+    activeTextEditor.selection = new vscode.Selection(new vscode.Position(0, 0), activeTextEditor.document.lineAt(lastLine).range.end)
+    await vscode.commands.executeCommand("editor.action.clipboardCopyAction");
+    removeSelection();
+  }));
 
 
   vscode.window.onDidChangeTextEditorSelection(async (e) => {
@@ -180,25 +128,26 @@ export async function activate(context: vscode.ExtensionContext) {
       const selection = e.selections[0];
       const end: vscode.Position = selection.end;
       const start = selection.start;
+      // Starte regionMode, wenn der Benutzer manuell selektiert
       if (!start.isEqual(end)) {
         inRegionMode = true;
-        startRegionMode();
+        await startRegionMode();
       }
     } else if (inRegionMode && !isSelectionBiggerThan1(e.selections[0])) {
       inRegionMode = false;
-      exitRegionMode();
+      await exitRegionMode();
     }
   });
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("emacs.startRegionMode", () => {
-      startRegionMode();
+    vscode.commands.registerCommand("emacs.startRegionMode", async () => {
+      await startRegionMode();
     })
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("emacs.exitRegionMode", () => {
-      exitRegionMode().then(removeSelection);
+    vscode.commands.registerCommand("emacs.exitRegionMode", async () => {
+      await exitRegionMode().then(removeSelection);
     })
   );
 
@@ -225,7 +174,7 @@ export async function activate(context: vscode.ExtensionContext) {
   ];
   selectionActions.forEach(selectionAction => {
     context.subscriptions.push(
-      vscode.commands.registerCommand("emacs." + selectionAction, () => {
+      vscode.commands.registerCommand("emacs." + selectionAction, async () => {
         const activeSelection = vscode.window.activeTextEditor.selection;
         const end: vscode.Position = activeSelection.end;
         const start = activeSelection.start;
@@ -233,12 +182,13 @@ export async function activate(context: vscode.ExtensionContext) {
         if (selectionAction === 'action.clipboardCutAction' && start.isEqual(end)) {
           return;
         }
-        const commandExecution = vscode.commands
+        let commandExecution: Thenable<any> = vscode.commands
           .executeCommand("editor." + selectionAction)
           .then(exitRegionMode);
         if (selectionAction === 'action.clipboardCopyAction') {
-         commandExecution.then(removeSelection);
+         commandExecution = commandExecution.then(removeSelection);
         } 
+        await commandExecution;
       })
     );
   });

@@ -2,14 +2,14 @@
   "name": "emacs-region-macos",
   "displayName": "emacs-region-macos",
   "description": "this extension provides region selection like emacs",
-  "version": "2.0.0",
-  "publisher": "lmauromb",
+  "version": "2.1.0",
+  "publisher": "Frederik Claus",
   "engines": {
     "vscode": "^1.38.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/lmauromb/vscode-emacs-region"
+    "url": "https://github.com/fvclaus/vscode-emacs-region"
   },
   "categories": [
     "Other"
@@ -42,6 +42,10 @@
       {
         "command": "emacs.debug.restart",
         "title": "Restart last debug"
+      },
+      {
+        "command": "emacs.copyAll",
+        "title": "Copy all"
       }
     ],
     "keybindings": [
