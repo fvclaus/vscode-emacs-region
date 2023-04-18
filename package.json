@@ -3,7 +3,7 @@
   "displayName": "emacs-region-macos",
   "description": "this extension provides region selection like emacs",
   "version": "2.1.0",
-  "publisher": "Frederik Claus",
+  "publisher": "fvclaus",
   "engines": {
     "vscode": "^1.38.0"
   },
