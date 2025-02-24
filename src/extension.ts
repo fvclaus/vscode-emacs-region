@@ -1,10 +1,3 @@
-// Copyright (c) 2016 Nisheet Jain
-// Released under the MIT license
-// https://github.com/nisheetjain/vscode-emacs/blob/master/LICENSE.txt
-
-"use strict";
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 
 let inRegionMode = false;
@@ -19,88 +12,17 @@ const isSelectionBiggerThan1 = (selection: vscode.Selection | undefined) => {
   return !start.isEqual(end);
 }
 
-type EditorView = "panel" | "editor" | "both" | "unknown";
-
-type PanelSize = "small" | "large";
-
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
   setRegionMode(false);
 
 
-  let panelSize : PanelSize = "small";
-  const closePanelAndSidebar = async () => {
-    await vscode.commands.executeCommand("workbench.action.closePanel");
-    await vscode.commands.executeCommand("workbench.action.closeSidebar");
-  }
-
-  let editorView: EditorView | undefined = null;
-
-  // Eine Idee, die nicht funktioniert: Anhand der Editor Selection rausfinden, ob das gesamte Dokument angezeigt wird
-  // uns so Rückschlüsse daraus ziehen, ob das panel offen ist oder nicht.
-
-
-  await closePanelAndSidebar();
-  editorView = "editor";
-
-  const togglePanel = async(focusCommand: string) => {
-    switch(editorView) {
-      case "panel": {
-        if (panelSize == "large")  {
-          await vscode.commands.executeCommand("workbench.action.toggleMaximizedPanel");
-          panelSize = "small";
-        }
-        await vscode.commands.executeCommand("workbench.view.explorer");
-        await vscode.commands.executeCommand("workbench.action.problems.focus");
-        await vscode.commands.executeCommand("workbench.action.focusActiveEditorGroup");
-        editorView = "both";
-        break;
-      }
-      case "both":
-      case "editor": {
-        await closePanelAndSidebar();
-        panelSize = "large";
-        await vscode.commands.executeCommand("workbench.action.toggleMaximizedPanel");
-        await vscode.commands.executeCommand(focusCommand);
-        editorView = "panel";
-        break;
-      }
-      case "unknown": {
-        vscode.window.showErrorMessage("Current view is unknown.");
-      }
-    }
-  }
-
-
   context.subscriptions.push(
-    vscode.commands.registerCommand("emacs.toggleEditor", async () => {
-      switch(editorView) {
-        case "panel":
-        case "both": {
-          await closePanelAndSidebar();
-          await vscode.commands.executeCommand("workbench.action.focusActiveEditorGroup");
-          editorView = "editor";
-          break;
-        }
-        case "editor": {
-          if (panelSize == "large") {
-            await vscode.commands.executeCommand("workbench.action.toggleMaximizedPanel");
-            panelSize = "small";
-          }
-          await vscode.commands.executeCommand("workbench.view.explorer");
-          await vscode.commands.executeCommand("workbench.action.problems.focus");
-          await vscode.commands.executeCommand("workbench.action.focusActiveEditorGroup");
-          editorView = "both";
-          break;
-        }
-        case "unknown": {
-          vscode.window.showErrorMessage("Current view is unknown.");
-        }
-      }
+    vscode.commands.registerCommand("emacs.closeAllPanels", async () => {
+      await vscode.commands.executeCommand("workbench.action.closePanel");
+      await vscode.commands.executeCommand("workbench.action.closeSidebar");
+      await vscode.commands.executeCommand("workbench.action.closeAuxiliaryBar");
+      await vscode.commands.executeCommand("workbench.action.focusActiveEditorGroup");
     }),
-    vscode.commands.registerCommand("emacs.toggleTerminal", () => togglePanel("terminal.focus")),
-    vscode.commands.registerCommand("emacs.toggleDebugConsole", () => togglePanel("workbench.debug.action.focusRepl"))
   )
 
   context.subscriptions.push(vscode.commands.registerCommand('emacs.testing.reRunLastRun', async () => {

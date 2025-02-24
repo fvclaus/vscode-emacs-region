@@ -2,10 +2,10 @@
   "name": "emacs-region-macos",
   "displayName": "emacs-region-macos",
   "description": "this extension provides region selection like emacs",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "publisher": "fvclaus",
   "engines": {
-    "vscode": "^1.38.0"
+    "vscode": "^1.96.0"
   },
   "repository": {
     "type": "git",
@@ -21,19 +21,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "emacs.toggleEditor",
-        "shortTitle": "Toggle editor",
-        "title": "Toggle editor"
-      },
-      {
-        "command": "emacs.toggleTerminal",
-        "shortTitle": "Toggle terminal",
-        "title": "Toggle terminal"
-      },
-      {
-        "command": "emacs.toggleDebugConsole",
-        "shortTitle": "Toggle debug console",
-        "title": "Toggle debug console"
+        "command": "emacs.closeAllPanels",
+        "title": "Close all panels"
       },
       {
         "command": "emacs.testing.reRunLastRun",
@@ -185,15 +174,12 @@
   },
   "scripts": {
     "vscode:prepublish": "tsc -p ./",
-    "compile": "tsc -p ./",
+    "compile": "rm -rf out && tsc -p ./",
     "watch": "tsc -watch -p ./",
     "package": "npx vsce package"
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.32",
-    "@types/node": "^6.0.40",
-    "@types/vscode": "1.31.0",
-    "mocha": "^6.2.0",
-    "typescript": "^2.0.3"
+    "@types/vscode": "1.96.0",
+    "typescript": "^5.7.3"
   }
 }
