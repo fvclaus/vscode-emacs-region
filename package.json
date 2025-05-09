@@ -1,7 +1,7 @@
 {
-  "name": "emacs-region-macos",
-  "displayName": "emacs-region-macos",
-  "description": "this extension provides region selection like emacs",
+  "name": "toolkit",
+  "displayName": "Toolkit",
+  "description": "Collection of extra commands for navigation, debugging etc.",
   "version": "3.0.0",
   "publisher": "fvclaus",
   "engines": {
@@ -41,102 +41,102 @@
       {
         "key": "alt+f",
         "command": "cursorWordRight",
-        "when": "editorTextFocus && !inRegionMode"
+        "when": "!inRegionMode"
       },
       {
         "key": "alt+f",
         "command": "cursorWordRightSelect",
-        "when": "editorTextFocus && inRegionMode"
+        "when": "inRegionMode"
       },
       {
         "key": "alt+b",
         "command": "cursorWordLeftSelect",
-        "when": "editorTextFocus && inRegionMode"
+        "when": "inRegionMode"
       },
       {
         "key": "alt+b",
         "command": "cursorWordLeft",
-        "when": "editorTextFocus && !inRegionMode"
+        "when": "!inRegionMode"
       },
       {
         "key": "ctrl+f",
         "command": "cursorRight",
-        "when": "editorTextFocus && !inRegionMode"
+        "when": "!inRegionMode"
       },
       {
         "key": "ctrl+f",
         "command": "cursorRightSelect",
-        "when": "editorTextFocus && inRegionMode"
+        "when": "inRegionMode"
       },
       {
         "key": "ctrl+b",
         "command": "cursorLeft",
-        "when": "editorTextFocus && !inRegionMode"
+        "when": "!inRegionMode"
       },
       {
         "key": "ctrl+b",
         "command": "cursorLeftSelect",
-        "when": "editorTextFocus && inRegionMode"
+        "when": "inRegionMode"
       },
       {
         "key": "ctrl+p",
         "command": "cursorUp",
-        "when": "editorTextFocus && !inRegionMode"
+        "when": "!inRegionMode"
       },
       {
         "key": "ctrl+p",
         "command": "cursorUpSelect",
-        "when": "editorTextFocus && inRegionMode"
+        "when": "inRegionMode"
       },
       {
         "key": "ctrl+n",
         "command": "cursorDown",
-        "when": "editorTextFocus && !inRegionMode"
+        "when": "!inRegionMode"
       },
       {
         "key": "ctrl+n",
         "command": "cursorDownSelect",
-        "when": "editorTextFocus && inRegionMode"
+        "when": "inRegionMode"
       },
       {
         "key": "ctrl+a",
         "command": "cursorHome",
-        "when": "editorTextFocus && !inRegionMode"
+        "when": "!inRegionMode"
       },
       {
         "key": "ctrl+a",
         "command": "cursorHomeSelect",
-        "when": "editorTextFocus && inRegionMode"
+        "when": "inRegionMode"
       },
       {
         "key": "ctrl+e",
         "command": "cursorEndSelect",
-        "when": "editorTextFocus && inRegionMode"
+        "when": "inRegionMode"
       },
       {
         "key": "ctrl+e",
         "command": "cursorEnd",
-        "when": "editorTextFocus && !inRegionMode"
+        "when": "!inRegionMode"
       },
       {
         "key": "alt+shift+,",
         "command": "cursorTop",
-        "when": "editorTextFocus && !inRegionMode"
+        "when": "!inRegionMode"
       },
       {
         "key": "alt+shift+,",
         "command": "cursorTopSelect",
-        "when": "editorTextFocus && inRegionMode"
+        "when": "inRegionMode"
       },
       {
         "key": "alt+shift+.",
         "command": "cursorBottom",
-        "when": "editorTextFocus && !inRegionMode"
+        "when": "!inRegionMode"
       },
       {
         "key": "alt+shift+.",
         "command": "cursorBottomSelect",
-        "when": "editorTextFocus && inRegionMode"
+        "when": "inRegionMode"
       },
       {
         "key": "alt+w",
@@ -153,7 +153,7 @@
       {
         "key": "ctrl+g",
         "command": "cancelSelection",
-        "when": "editorHasTextFocus && editorHasSelection"
+        "when": "editorHasSelection"
       },
       {
         "key": "ctrl+g",
@@ -162,8 +162,7 @@
       },
       {
         "key": "ctrl+space",
-        "command": "emacs.startRegionMode",
-        "when": "editorFocus"
+        "command": "emacs.startRegionMode"
       },
       {
         "key": "ctrl+k",

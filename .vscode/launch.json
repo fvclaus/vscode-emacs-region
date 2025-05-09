@@ -7,9 +7,11 @@
       "type": "extensionHost",
       "request": "launch",
       "runtimeExecutable": "${execPath}",
-      "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
+      // Avoid problems with other extension when running on the extension development host
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}", "--profile", "only emacs-region-macos"],
       "outFiles": ["${workspaceRoot}/out/**/*.js"],
-      "preLaunchTask": "npm: compile"
+      // Extension host does not automatically pick up changes, you need to use 'Developer: Reload Window'
+      "preLaunchTask": "npm: watch"
     },
   ]
 }

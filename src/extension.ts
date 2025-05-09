@@ -30,9 +30,81 @@ export async function activate(context: vscode.ExtensionContext) {
     await vscode.commands.executeCommand('testing.reRunLastRun')
   }));
 
+  let activeDebugSessions: vscode.DebugSession[] = [];
+
+  context.subscriptions.push(vscode.debug.onDidStartDebugSession(session => {
+    // Exclude child sessions
+    if (!session.parentSession) {
+      activeDebugSessions.push(session);
+    }
+    // console.log('Started debug session:', session.name);
+  }));
+
+  context.subscriptions.push(vscode.debug.onDidTerminateDebugSession(session => {
+    activeDebugSessions = activeDebugSessions.filter(s => s !== session);
+    // console.log('Terminated debug session:', session.name);
+  }));
+
   context.subscriptions.push(vscode.commands.registerCommand('emacs.debug.restart', async () => {
-    await vscode.commands.executeCommand('workbench.action.debug.stop');
-    await vscode.commands.executeCommand('workbench.action.debug.start')
+    if (activeDebugSessions.length > 0) {
+      const sessionNames = activeDebugSessions.map(session => session.name);
+      let selectedName = sessionNames[0];
+      if (sessionNames.length > 1) {
+        selectedName = await vscode.window.showQuickPick(sessionNames, {
+          placeHolder: 'Select debug session to restart'
+        });
+      }
+
+      if (selectedName) {
+        const selectedSession = activeDebugSessions.find(session => session.name === selectedName);
+        if (selectedSession) {
+          // Wait a moment for the session to fully stop before restarting
+          let terminateDisposable: vscode.Disposable | undefined;
+          const terminationPromise = new Promise<void>(resolve => {
+            terminateDisposable = vscode.debug.onDidTerminateDebugSession(e => {
+              if (e === selectedSession) {
+                resolve();
+              }
+            });
+          });
+
+          let startDebugSessionDisposable: vscode.Disposable | undefined;
+
+          const timeoutPromise = new Promise<void>((_, reject) => {
+            setTimeout(() => {
+              reject(new Error("Debug session did not terminate within 10 seconds."));
+            }, 10000); // 10 seconds timeout
+          });
+
+          await vscode.debug.stopDebugging(selectedSession);
+
+          try {
+            await Promise.race([terminationPromise, timeoutPromise]);
+            let sessionName = selectedSession.name;
+            const separator = ' « ';
+            const separatorIndex = sessionName.indexOf(separator);
+
+            if (separatorIndex !== -1) {
+              sessionName = sessionName.substring(separatorIndex + separator.length).trim();
+            }
+
+            let newDebugSession: vscode.DebugSession | undefined;
+            startDebugSessionDisposable = vscode.debug.onDidStartDebugSession(session => {
+              newDebugSession = session;
+            });
+            await vscode.debug.startDebugging(selectedSession.workspaceFolder, sessionName);
+          } catch (error: any) {
+            vscode.window.showErrorMessage(error.message);
+          } finally {
+            terminateDisposable?.dispose();
+            startDebugSessionDisposable?.dispose();
+          }
+        }
+      }
+    } else {
+      // If no session is active, just start the default one
+      await vscode.commands.executeCommand('workbench.action.debug.start');
+    }
   }));
 
   context.subscriptions.push(vscode.commands.registerCommand("emacs.copyAll", async () => {
@@ -82,7 +154,7 @@ export async function activate(context: vscode.ExtensionContext) {
       const line = document.lineAt(start);
       const selection = new vscode.Range(start, line.range.end);
       workspaceEdit.replace(document.uri, selection, '');
-      const success  = await vscode.workspace.applyEdit(workspaceEdit);
+      const success = await vscode.workspace.applyEdit(workspaceEdit);
       if (!success) {
         console.warn(`Cannot kill line`);
       }
@@ -97,19 +169,21 @@ export async function activate(context: vscode.ExtensionContext) {
   selectionActions.forEach(selectionAction => {
     context.subscriptions.push(
       vscode.commands.registerCommand("emacs." + selectionAction, async () => {
-        const activeSelection = vscode.window.activeTextEditor.selection;
-        const end: vscode.Position = activeSelection.end;
-        const start = activeSelection.start;
         // Don't know why this is necessary. Cuts whole line otherwise.
-        if (selectionAction === 'action.clipboardCutAction' && start.isEqual(end)) {
-          return;
+        if (selectionAction === 'action.clipboardCutAction' && vscode.window.activeTextEditor !== undefined) {
+          const activeSelection = vscode.window.activeTextEditor.selection;
+          const end: vscode.Position = activeSelection.end;
+          const start = activeSelection.start;
+          if (start.isEqual(end)) {
+            return;
+          }
         }
         let commandExecution: Thenable<any> = vscode.commands
           .executeCommand("editor." + selectionAction)
           .then(exitRegionMode);
         if (selectionAction === 'action.clipboardCopyAction') {
-         commandExecution = commandExecution.then(removeSelection);
-        } 
+          commandExecution = commandExecution.then(removeSelection);
+        }
         await commandExecution;
       })
     );
