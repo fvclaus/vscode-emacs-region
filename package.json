@@ -2,7 +2,7 @@
   "name": "toolkit",
   "displayName": "Toolkit",
   "description": "Collection of extra commands for navigation, debugging etc.",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "publisher": "fvclaus",
   "engines": {
     "vscode": "^1.96.0"
